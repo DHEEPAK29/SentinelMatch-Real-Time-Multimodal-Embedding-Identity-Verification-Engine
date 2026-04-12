@@ -5,12 +5,15 @@ from PIL import Image
 import io
 from core.model import SiameseNetwork
 from infra.vector_db import VectorDBClient # client for Milvus/FAISS
+import uuid
+import redis
 
 router = APIRouter()
 # Load model to device (GPU if available)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = SiameseNetwork().to(device).eval()
 db = VectorDBClient()
+r = redis.Redis(host='localhost', port=6379, db=0)
 
 # Standard ResNet transformation pipeline
 transform = transforms.Compose([
@@ -23,6 +26,7 @@ transform = transforms.Compose([
 async def verify_identity(file: UploadFile = File(...)):
     try:
         # 1. Preprocess
+        job_id = str(uuid.uuid4())
         image_data = await file.read()
         image = Image.open(io.BytesIO(image_data)).convert('RGB')
         tensor = transform(image).unsqueeze(0).to(device)
@@ -35,6 +39,9 @@ async def verify_identity(file: UploadFile = File(...)):
         # Query DB for the most similar identity
         result = db.search(embedding, k=1)
         
+        r.set(f"job:{job_id}:data", await file.read())
+        r.lpush("inference_queue", job_id)
+
         if not result:
             raise HTTPException(status_code=404, detail="Identity not found")
 
