@@ -1,0 +1,11 @@
+# SentinelMatch API Documentation
+Base URL: https://api.sentinelmatch.local
+Usage: This API performs real-time identity verification using Siamese ResNet-18 embeddings.
+
+Endpoints:
+- POST /verify: Accepts an image file, extracts embedding, queries Vector DB for match.
+- GET /health: Returns system status.
+
+Guidelines:
+- Always use multipart/form-data for image uploads.
+- Confidence thresholds are managed server-side.

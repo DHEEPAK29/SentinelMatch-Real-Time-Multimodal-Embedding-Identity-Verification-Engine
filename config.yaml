@@ -1,0 +1,17 @@
+# Infrastructure Configuration
+vector_db:
+  host: "milvus-cluster.internal"
+  port: 19530
+  collection: "user_biometrics"
+  timeout: 30
+
+# Model Hyperparameters
+model:
+  embedding_dim: 128
+  threshold: 0.85
+  device: "cuda"
+
+# API Settings
+api:
+  workers: 4
+  log_level: "INFO"

@@ -1,0 +1,9 @@
+fastapi==0.115.0
+uvicorn[standard]==0.30.0
+torch==2.3.0
+torchvision==0.18.0
+pillow==10.3.0
+pydantic==2.7.0
+pymilvus==2.4.0  # Or faiss-cpu for local development
+python-multipart==0.0.9
+pyyaml==6.0.1
