@@ -3,7 +3,6 @@ from .backbone import SharedBackbone
 import time
 import torch
 import redis
-from core.model import SharedBackbone
 
 class SiameseNetwork(nn.Module):
     def __init__(self, embedding_dim=128):
